@@ -6,6 +6,7 @@ class MessageResponse extends BaseResponse<MessageResponse> {
   factory MessageResponse.fromMap(Map<String, dynamic>? map) => MessageResponse(
       message: map?['message'] as String? ??
           map?['msg'] as String? ??
+          map?['statusMessage'] as String? ??
           map?['OperationMessage'] as String? ??
           map?['operationMessage'] as String? ??
           map?['error_description'] as String? ??

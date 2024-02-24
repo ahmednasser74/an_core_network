@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:an_core/an_core.dart';
-import 'package:an_core_network/src/dependencies/dependency_init.dart';
 import 'package:dio/dio.dart' hide ResponseType;
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
@@ -8,23 +7,20 @@ import 'package:injectable/injectable.dart';
 import 'index.dart';
 
 abstract class Network {
-  // Future<AppResponse> send<R, ER extends BaseResponse, T extends BaseResponse<T>>({
   Future<AppResponse<T>> send<T extends BaseResponse<T>>({
     required Request request,
-    required T responseObject,
-    ResponseType responseType = ResponseType.single,
-    // ER Function(Map<String, dynamic> map)? errorResponseFromMap,
+    T? responseObject,
+    required ResponseType responseType,
   });
 }
 
 @LazySingleton(as: Network)
 class NetworkImpl implements Network {
-  final AppLogger appLogger;
-
   NetworkImpl(this.appLogger) {
-    final interceptor = networkPackageGetIt<AppLogger>();
-    _dio.interceptors.add(interceptor);
+    _dio.interceptors.add(appLogger);
   }
+
+  final AppLogger appLogger;
   final int timeOutInMilliseconds = 10000;
   final StatusChecker _statusChecker = StatusChecker();
   final Dio _dio = Dio();
@@ -32,14 +28,13 @@ class NetworkImpl implements Network {
   @override
   Future<AppResponse<T>> send<T extends BaseResponse<T>>({
     required Request request,
-    required T responseObject,
+    T? responseObject,
     ResponseType responseType = ResponseType.single,
-
-    // required R Function(dynamic map) responseFromMap,
-    // ER Function(Map<String, dynamic> map)? errorResponseFromMap,
   }) async {
     try {
       debugPrint(request.headers?["Authorization"]);
+      if (responseObject == null && responseType != ResponseType.singleWithoutData) throw const ParsingException();
+
       final response = await _requestPayload(request);
       if (response.data is Map<String, dynamic> && (response.data?.containsKey("errorCode"))) {
         throw Exceptions.serverException(response);
@@ -51,7 +46,8 @@ class NetworkImpl implements Network {
       }
     } on DioException catch (error) {
       if (error.type == DioExceptionType.badResponse) {
-        if (error.response?.statusCode != null && _statusChecker(error.response!.statusCode) == HTTPCodes.error) {
+        final statusCode = _statusChecker(error.response!.statusCode);
+        if (error.response?.statusCode != null && (statusCode == HTTPCodes.error || statusCode == HTTPCodes.serviceNotAvailable)) {
           // debugPrint((error.response?.statusCode != null && _statusChecker(error.response!.statusCode) == HTTPCodes.error).toString());
           try {
             if (error.response!.statusCode == 401) {
@@ -61,7 +57,7 @@ class NetworkImpl implements Network {
               error.response!.statusCode!,
               MessageResponse.fromMap(error.response?.data is Map<String, dynamic> ? error.response?.data as Map<String, dynamic> : null),
               // errorResponseFromMap != null
-              //     ? errorResponseFromMap(error.response!.data as Map<String, dynamic>)
+              // /    ? errorResponseFromMap(error.response!.data as Map<String, dynamic>)
               //     : MessageResponse.fromMap(error.response?.data is Map<String, dynamic> ? error.response?.data as Map<String, dynamic> : null),
             );
           } catch (exception) {
@@ -111,11 +107,11 @@ class NetworkImpl implements Network {
         DioExceptionType.connectionError => throw const ConnectionException(),
       };
 
-  AppResponse<T> _retrieveResponse<T extends BaseResponse<T>>(dynamic json, T object, ResponseType responseType) {
+  AppResponse<T> _retrieveResponse<T extends BaseResponse<T>>(dynamic json, T? object, ResponseType responseType) {
     return switch (responseType) {
-      ResponseType.single => AppResponseSingleResult<T>.fromJson(json, object),
+      ResponseType.single => AppResponseSingleResult<T>.fromJson(json, object!),
       ResponseType.singleWithoutData => AppResponseSingleResult<T>.fromJsonWithoutData(json),
-      ResponseType.list => AppResponseListResult<T>.fromJson(json, object),
+      ResponseType.list => AppResponseListResult<T>.fromJson(json, object!),
     };
   }
 }
