@@ -13,7 +13,7 @@ abstract class RequestModel extends Equatable {
 
   void cancelRequest([dynamic reason]) => cancelToken.cancel(reason);
 
-  Future<dynamic> toJson();
+  Map<String, dynamic> toJson();
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
@@ -38,5 +38,5 @@ class EmptyRequestModel extends RequestModel {
   List<Object?> get props => [];
 
   @override
-  Future<Map<String, dynamic>> toJson() async => {};
+  Map<String, dynamic> toJson() => {};
 }
