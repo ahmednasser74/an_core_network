@@ -32,6 +32,7 @@ class NetworkImpl implements Network {
     ResponseType responseType = ResponseType.single,
   }) async {
     try {
+      final x = await request.data;
       debugPrint(request.headers?["Authorization"]);
       if (responseObject == null && responseType != ResponseType.singleWithoutData) throw const ParsingException();
 
@@ -79,21 +80,25 @@ class NetworkImpl implements Network {
   }
 
   Future<Response> _requestPayload(Request request) async {
-    final requestPayload = _dio.request(
-      request.url,
-      data: await request.data,
-      queryParameters: await request.queryParameters,
-      cancelToken: request.cancelToken,
-      onSendProgress: request.requestModel.progressListener?.onSendProgress,
-      onReceiveProgress: request.requestModel.progressListener?.onReceiveProgress,
-      options: Options(
-        headers: request.headers,
-        method: request.method,
-        sendTimeout: Duration(milliseconds: request.sendTimeout ?? timeOutInMilliseconds),
-        receiveTimeout: Duration(milliseconds: request.receiveTimeout ?? timeOutInMilliseconds),
-      ),
-    );
-    return requestPayload;
+    try {
+      final requestPayload = _dio.request(
+        request.url,
+        data: await request.data,
+        queryParameters: await request.queryParameters,
+        cancelToken: request.cancelToken,
+        onSendProgress: request.requestModel.progressListener?.onSendProgress,
+        onReceiveProgress: request.requestModel.progressListener?.onReceiveProgress,
+        options: Options(
+          headers: request.headers,
+          method: request.method,
+          sendTimeout: Duration(milliseconds: request.sendTimeout ?? timeOutInMilliseconds),
+          receiveTimeout: Duration(milliseconds: request.receiveTimeout ?? timeOutInMilliseconds),
+        ),
+      );
+      return requestPayload;
+    } catch (error) {
+      throw const Exceptions.parsingException();
+    }
   }
 
   Exceptions throwExceptionType(DioException error) => switch (error.type) {

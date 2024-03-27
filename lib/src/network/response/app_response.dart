@@ -2,27 +2,27 @@ import '../index.dart';
 
 abstract class AppResponse<T extends BaseResponse<T>> {
   AppResponse(this.message, this.code);
-  int code = 500;
+  int? code;
   // bool httpCode;
   String? message;
-  bool status = false;
+  dynamic status;
   List<String>? errors;
   final StatusChecker _checker = StatusChecker();
 
   AppResponse.fromJson(Map<String, dynamic> json, T object) {
-    message = (json['message'] as String?) ?? '';
-    code = json['code'] as int;
-    status = json['status'] as bool;
+    message = json['message'] ?? '';
+    code = json['code'];
+    status = json['status'];
     errors = json['errors'] == null ? null : (json['errors'] as List<dynamic>).map((e) => e.toString()).toList();
     if (json['data'] != null) {
       serializeResult(json['data'], object);
     }
   }
-  bool get isSuccess => _checker(code) == HTTPCodes.success;
+  bool? get isSuccess => _checker(code) == HTTPCodes.success;
 
   AppResponse.fromJsonWithoutData(Map<String, dynamic> json) {
     message = (json['message'] as String?) ?? '';
-    code = json['code'] as int;
+    code = json['code'];
     errors = json['errors'] == null ? null : (json['errors'] as List<dynamic>).map((e) => e.toString()).toList();
   }
 

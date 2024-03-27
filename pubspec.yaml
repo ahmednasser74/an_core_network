@@ -1,7 +1,7 @@
 name: an_core_network
 description: "A new Flutter package project."
 version: 0.0.1
-homepage: null
+# homepage: null
 
 environment:
   sdk: ">=3.2.6 <4.0.0"
@@ -9,7 +9,11 @@ environment:
 
 dependencies:
   an_core:
-    path: ../an_core
+    # path: ../an_core
+    git:
+      url: https://github.com/ahmednasser74/an_core.git
+      ref: main
+
   dio: ^5.4.1
   equatable: ^2.0.5
   flutter:
