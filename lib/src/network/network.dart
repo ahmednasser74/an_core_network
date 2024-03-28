@@ -32,7 +32,6 @@ class NetworkImpl implements Network {
     ResponseType responseType = ResponseType.single,
   }) async {
     try {
-      final x = await request.data;
       debugPrint(request.headers?["Authorization"]);
       if (responseObject == null && responseType != ResponseType.singleWithoutData) throw const ParsingException();
 
@@ -47,7 +46,7 @@ class NetworkImpl implements Network {
       }
     } on DioException catch (error) {
       if (error.type == DioExceptionType.badResponse) {
-        final statusCode = _statusChecker(error.response!.statusCode);
+        final HTTPCodes statusCode = _statusChecker(error.response!.statusCode);
         if (error.response?.statusCode != null && (statusCode == HTTPCodes.error || statusCode == HTTPCodes.serviceNotAvailable)) {
           // debugPrint((error.response?.statusCode != null && _statusChecker(error.response!.statusCode) == HTTPCodes.error).toString());
           try {
@@ -55,7 +54,7 @@ class NetworkImpl implements Network {
               throw const Exceptions.authException();
             }
             throw Exceptions.errorException(
-              error.response!.statusCode!,
+              error.response!.statusMessage!,
               MessageResponse.fromMap(error.response?.data is Map<String, dynamic> ? error.response?.data as Map<String, dynamic> : null),
               // errorResponseFromMap != null
               // /    ? errorResponseFromMap(error.response!.data as Map<String, dynamic>)

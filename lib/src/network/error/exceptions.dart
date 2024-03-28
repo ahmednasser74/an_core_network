@@ -9,7 +9,7 @@ abstract class Exceptions extends Equatable implements Exception {
   const Exceptions._();
 
   const factory Exceptions.serverException(Response? response) = ServerException;
-  const factory Exceptions.errorException(int statusCode, BaseResponse errorResponse) = ErrorException;
+  const factory Exceptions.errorException(String statusCode, BaseResponse errorResponse) = ErrorException;
   const factory Exceptions.cacheException() = CacheException;
   const factory Exceptions.parsingException() = ParsingException;
   const factory Exceptions.badRequestException(Response? response) = BadRequestException;
@@ -22,7 +22,7 @@ abstract class Exceptions extends Equatable implements Exception {
 class ErrorException extends Exceptions {
   const ErrorException(this.statusCode, this.errorResponse) : super._();
 
-  final int statusCode;
+  final String statusCode;
   final BaseResponse errorResponse;
 
   @override

@@ -107,13 +107,13 @@ mixin PostRequest on Request {
 
   @override
   Future<dynamic> get data async {
-    final map = await requestModel.toJson();
-    if (map is Map<String, dynamic>) {
-      if (map.isEmpty) return null;
-      return multiPart ? FormData.fromMap(map) : map;
-    } else {
-      return map;
-    }
+    return requestModel.toJson();
+    // if (map is Map<String, dynamic>) {
+    //   if (map.isEmpty) return null;
+    //   return multiPart ? FormData.fromMap(map) : map;
+    // } else {
+    // return map;
+    // }
   }
 
   @override
