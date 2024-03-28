@@ -32,7 +32,7 @@ class NetworkImpl implements Network {
     ResponseType responseType = ResponseType.single,
   }) async {
     try {
-      debugPrint(request.headers?["Authorization"]);
+      // debugPrint(request.headers?["Authorization"]);
       if (responseObject == null && responseType != ResponseType.singleWithoutData) throw const ParsingException();
 
       final response = await _requestPayload(request);
@@ -53,9 +53,10 @@ class NetworkImpl implements Network {
             if (error.response!.statusCode == 401) {
               throw const Exceptions.authException();
             }
+            final serverMessage = MessageResponse.fromMap(error.response?.data is Map<String, dynamic> ? error.response?.data as Map<String, dynamic> : null);
             throw Exceptions.errorException(
-              error.response!.statusMessage!,
-              MessageResponse.fromMap(error.response?.data is Map<String, dynamic> ? error.response?.data as Map<String, dynamic> : null),
+              error.response!.statusCode!,
+              serverMessage,
               // errorResponseFromMap != null
               // /    ? errorResponseFromMap(error.response!.data as Map<String, dynamic>)
               //     : MessageResponse.fromMap(error.response?.data is Map<String, dynamic> ? error.response?.data as Map<String, dynamic> : null),
