@@ -29,7 +29,7 @@ class BaseRequestDefaults {
   }
 
   void setAcceptedLanguage(String languageCode) {
-    _acceptedLanguage = {'Accept-Language': languageCode == 'en' ? 'en-US' : "ar-EG"};
+    _acceptedLanguage = {'Accept-Language': languageCode};
   }
 
   void removeToken() => _token = {};
@@ -74,6 +74,7 @@ mixin Request implements BaseRequest {
     final headers = <String, String>{};
     headers.addAll(_header);
     if (token.isNotEmpty && includeAuthorization) headers.addAll(token);
+    //* used in case of sending data in form url encoded format (commonly usage while sending File )
     if (isEncoded) {
       headers["content-Type"] = 'application/x-www-form-urlencoded';
     }

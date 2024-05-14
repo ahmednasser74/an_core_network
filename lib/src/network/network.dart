@@ -32,8 +32,9 @@ class NetworkImpl implements Network {
     ResponseType responseType = ResponseType.single,
   }) async {
     try {
-      // debugPrint(request.headers?["Authorization"]);
-      if (responseObject == null && responseType != ResponseType.singleWithoutData) throw const ParsingException();
+      if (responseObject == null && responseType != ResponseType.singleWithoutData) {
+        throw const ParsingException();
+      }
 
       final response = await _requestPayload(request);
       if (response.data is Map<String, dynamic> && (response.data?.containsKey("errorCode"))) {
@@ -81,9 +82,10 @@ class NetworkImpl implements Network {
 
   Future<Response> _requestPayload(Request request) async {
     try {
+      final data = await request.data;
       final requestPayload = _dio.request(
         request.url,
-        data: await request.data,
+        data: data,
         queryParameters: await request.queryParameters,
         cancelToken: request.cancelToken,
         onSendProgress: request.requestModel.progressListener?.onSendProgress,
