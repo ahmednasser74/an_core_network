@@ -12,6 +12,7 @@ class MessageResponse extends BaseResponse<MessageResponse> {
           map?['error_description'] as String? ??
           map?['errorCode'] ??
           map?['error'] ??
+          (map?['errors'] as List<dynamic>?)?.join(", ") ??
           "somethingWentWrong");
 
   final String message;

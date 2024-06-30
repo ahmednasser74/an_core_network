@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:an_core/an_core.dart';
 import 'package:dio/dio.dart' hide ResponseType;
-import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
 import 'index.dart';
@@ -21,7 +20,7 @@ class NetworkImpl implements Network {
   }
 
   final AppLogger appLogger;
-  final int timeOutInMilliseconds = 10000;
+  final int timeOutInMilliseconds = 40000;
   final StatusChecker _statusChecker = StatusChecker();
   final Dio _dio = Dio();
 
