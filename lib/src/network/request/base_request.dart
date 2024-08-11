@@ -78,6 +78,7 @@ mixin Request implements BaseRequest {
     if (isEncoded) {
       headers["content-Type"] = 'application/x-www-form-urlencoded';
     }
+    headers["Accept"] = 'application/json';
     if (_acceptedLanguage.isNotEmpty && includeLocalization) headers.addAll(_acceptedLanguage);
     return headers;
   }
