@@ -15,11 +15,12 @@ abstract class Network {
 
 @LazySingleton(as: Network)
 class NetworkImpl implements Network {
-  NetworkImpl(this.appLogger) {
-    _dio.interceptors.add(appLogger);
+  NetworkImpl(this.appLogger, {this.interceptors}) {
+    _dio.interceptors.addAll([appLogger, if (interceptors != null) ...interceptors!]);
   }
 
   final AppLogger appLogger;
+  final List<Interceptor>? interceptors;
   final int timeOutInMilliseconds = 40000;
   final StatusChecker _statusChecker = StatusChecker();
   final Dio _dio = Dio();
