@@ -14,7 +14,7 @@ abstract class AppResponse<T extends BaseResponse<T>> {
     code = json['code'];
     status = json['status'];
     errors = json['errors'] == null ? null : (json['errors'] as List<dynamic>).map((e) => e.toString()).toList();
-    if (json['data'] != null) {
+    if (json['data'] != null && (json['data'] is! List || json['data'].isNotEmpty) && (json['data'] is! Map || json['data'].isNotEmpty)) {
       serializeResult(json['data'], object);
     }
   }
