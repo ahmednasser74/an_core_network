@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:an_core/an_core.dart';
+import 'package:an_core_log/an_core_log.dart';
 import 'package:dio/dio.dart' hide ResponseType;
 import 'package:injectable/injectable.dart';
 

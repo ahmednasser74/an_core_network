@@ -8,11 +8,11 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
-  an_core:
-    # path: ../an_core
-    git:
-      url: https://github.com/ahmednasser74/an_core.git
-      ref: main
+  an_core_log:
+    path: ../an_core_log
+    # git:
+    #   url: https://github.com/ahmednasser74/an_core_log.git
+    #   ref: main
 
   dio: ^5.4.1
   equatable: ^2.0.5
