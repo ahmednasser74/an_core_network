@@ -3,6 +3,7 @@ import 'network_enum.dart';
 class StatusChecker {
   final success = [200, 201, 202, 204];
   final validationError = [400, 409, 422];
+  final redirectError = [301, 302, 303, 307, 308];
   final authorizationError = [401];
   final authenticationError = [403];
   final methodNotAllowedError = [405];
@@ -15,6 +16,7 @@ class StatusChecker {
     if (success.contains(statusCode)) return HTTPCodes.success;
     if (error.contains(statusCode)) return HTTPCodes.error;
     if (invalidToken.contains(statusCode)) return HTTPCodes.invalidToken;
+    if (redirectError.contains(statusCode)) return HTTPCodes.redirect;
     if (serviceNotAvailable.contains(statusCode)) {
       return HTTPCodes.serviceNotAvailable;
     } else {
@@ -31,6 +33,8 @@ class StatusChecker {
       return ErrorStatus.authenticationError;
     } else if (resourceNotFoundError.contains(statusCode)) {
       return ErrorStatus.resourceNotFoundError;
+    } else if (redirectError.contains(statusCode)) {
+      return ErrorStatus.redirectError;
     }
     return ErrorStatus.unknownError;
   }

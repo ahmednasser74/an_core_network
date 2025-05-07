@@ -47,7 +47,7 @@ class NetworkImpl implements Network {
       }
     } on DioException catch (error) {
       if (error.type == DioExceptionType.badResponse) {
-        final HTTPCodes statusCode = _statusChecker(error.response!.statusCode);
+        final HTTPCodes statusCode = _statusChecker.call(error.response!.statusCode);
         if (error.response?.statusCode != null && (statusCode == HTTPCodes.error || statusCode == HTTPCodes.serviceNotAvailable)) {
           // debugPrint((error.response?.statusCode != null && _statusChecker(error.response!.statusCode) == HTTPCodes.error).toString());
           try {
@@ -65,6 +65,8 @@ class NetworkImpl implements Network {
           } catch (exception) {
             rethrow;
           }
+        } else if (statusCode == HTTPCodes.redirect) {
+          throw Exceptions.redirectException(error.response!);
         } else {
           throw Exceptions.serverException(error.response!);
         }

@@ -13,6 +13,11 @@ class FailureHandler {
   Failure getExceptionFailure() {
     try {
       switch (exception.runtimeType) {
+        case RedirectException:
+          return RedirectFailure(
+            message: MessageResponse.fromMap((exception as RedirectException).response?.data is Map ? (exception as RedirectException).response?.data as Map<String, dynamic> : null).message,
+          );
+
         case SocketException:
           return NoConnectionFailure(message: "noConnection");
 

@@ -11,6 +11,7 @@ abstract class Exceptions extends Equatable implements Exception {
   const factory Exceptions.serverException(Response? response) = ServerException;
   const factory Exceptions.errorException(int statusCode, BaseResponse errorResponse) = ErrorException;
   const factory Exceptions.cacheException() = CacheException;
+  const factory Exceptions.redirectException(Response? response) = RedirectException;
   const factory Exceptions.parsingException() = ParsingException;
   const factory Exceptions.badRequestException(Response? response) = BadRequestException;
   const factory Exceptions.internalServerException(Response? response) = InternalServerException;
@@ -100,4 +101,11 @@ class RequestCanceledException extends Exceptions {
 
   @override
   List<Object?> get props => [];
+}
+
+class RedirectException extends Exceptions {
+  const RedirectException(this.response) : super._();
+  final Response? response;
+  @override
+  List<Object?> get props => [response];
 }

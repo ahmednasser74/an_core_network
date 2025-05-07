@@ -30,8 +30,7 @@ class ParsingFailure extends Failure {
 }
 
 class DocumentTypeNotRecognizedFailure extends Failure {
-  DocumentTypeNotRecognizedFailure()
-      : super(message: "DocumentTypeNotRecognized");
+  DocumentTypeNotRecognizedFailure() : super(message: "DocumentTypeNotRecognized");
 }
 
 class CacheFailure extends Failure {
@@ -89,4 +88,10 @@ class DocumentSidesNotMatchFailure extends Failure {
 
 class DocumentExpiredFailure extends Failure {
   DocumentExpiredFailure() : super(message: 'backSideNotTheSameAsTheFront');
+}
+
+class RedirectFailure extends Failure {
+  RedirectFailure({
+    String? message,
+  }) : super(message: message);
 }

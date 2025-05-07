@@ -55,3 +55,30 @@ class AppResponseListResult<T extends BaseResponse<T>> extends AppResponse<T> {
     results = (dataJson as List<dynamic>).map((dynamic e) => object.fromJson(e as Map<String, dynamic>)).toList();
   }
 }
+
+class AppResponsePaginationResult<T extends BaseResponse<T>> extends AppResponse<T> {
+  AppResponsePaginationResult(String message, int status) : super(message, status);
+
+  AppResponsePaginationResult.fromJson(Map<String, dynamic> json, T object) : super.fromJson(json, object);
+
+  List<T>? list;
+  int? totalCount;
+  int? page;
+  int? limit;
+  int? totalPages;
+  bool? hasNextPage;
+  bool? hasPreviousPage;
+
+  @override
+  void serializeResult(dynamic dataJson, T object) {
+    if (dataJson is Map<String, dynamic>) {
+      list = (dataJson['list'] as List<dynamic>?)?.map((dynamic e) => object.fromJson(e as Map<String, dynamic>)).toList();
+      totalCount = dataJson['totalCount'];
+      page = dataJson['page'];
+      limit = dataJson['limit'];
+      totalPages = dataJson['totalPages'];
+      hasNextPage = dataJson['hasNextPage'];
+      hasPreviousPage = dataJson['hasPreviousPage'];
+    }
+  }
+}

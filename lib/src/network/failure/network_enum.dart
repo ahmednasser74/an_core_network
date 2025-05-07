@@ -3,6 +3,7 @@ enum ErrorStatus {
   authorizationError,
   authenticationError,
   resourceNotFoundError,
+  redirectError,
   unknownError,
 }
 
@@ -12,6 +13,7 @@ enum HTTPCodes {
   invalidToken,
   serviceNotAvailable,
   unknown,
+  redirect,
 }
 
 enum ResponseType {
