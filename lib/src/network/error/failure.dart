@@ -95,3 +95,7 @@ class RedirectFailure extends Failure {
     String? message,
   }) : super(message: message);
 }
+
+class SSLPinningFailure extends Failure {
+  SSLPinningFailure() : super(message: 'sslPinningFailure');
+}

@@ -109,3 +109,10 @@ class RedirectException extends Exceptions {
   @override
   List<Object?> get props => [response];
 }
+
+class SSLPinningException extends Exceptions {
+  const SSLPinningException() : super._();
+
+  @override
+  List<Object?> get props => [];
+}

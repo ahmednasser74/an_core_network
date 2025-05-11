@@ -4,6 +4,7 @@ import 'package:dio/dio.dart' hide ResponseType;
 import 'package:injectable/injectable.dart';
 
 import 'index.dart';
+import 'security/network_ssl_pinning.dart';
 
 abstract class Network {
   Future<AppResponse<T>> send<T extends BaseResponse<T>>({
@@ -14,12 +15,16 @@ abstract class Network {
 }
 
 @LazySingleton(as: Network)
-class NetworkImpl implements Network {
-  NetworkImpl(this.appLogger, {this.interceptors}) {
+class NetworkImpl with NetworkSSLPinning implements Network {
+  NetworkImpl(this.appLogger, {this.interceptors, this.sslPinningHash}) {
     _dio.interceptors.addAll([appLogger, if (interceptors != null) ...interceptors!]);
+    if (sslPinningHash != null) {
+      addSSLPinning(sslPinningHash!, _dio);
+    }
   }
 
   final AppLogger appLogger;
+  final String? sslPinningHash;
   final List<Interceptor>? interceptors;
   final int timeOutInMilliseconds = 40000;
   final StatusChecker _statusChecker = StatusChecker();
